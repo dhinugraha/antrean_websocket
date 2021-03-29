@@ -1,0 +1,97 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>websocket send</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    
+</head>
+
+<body>
+    
+	<div class="container">
+        <div class="list-group">
+            <button type="btn" class="list-group-item list-group-item-primary" id="send1">
+                Channel 1 
+                <span id="log1"></span>
+            </button>
+            
+            <button type="btn" class="list-group-item list-group-item-success" id="send2" >
+                Channel 2
+                <span id="log2"></span>
+            </button>
+        
+            <button type="btn" class="list-group-item list-group-item-danger" id="send3" >
+                Channel 3
+                <span id="log3"></span>
+            </button>
+            
+            <button type="btn" class="list-group-item list-group-item-dark" id="reset" >
+                RESET <br>
+                <span id="logreset"></span>
+            </button>
+            
+            <button type="btn" class="list-group-item list-group-item-info" id="other" >
+                TEST LAIN<br>
+                <span id="logother"></span>
+            </button>
+        </div>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script>
+        var server = 'ws://localhost:8000/';
+        function zPad(n) {
+            if (n < 10) return '0' + n;
+            else return n;
+        }
+        function timestamp() {
+            var d = new Date();
+            return zPad(d.getHours()) + ':' + zPad(d.getMinutes()) + ':' + zPad(d.getSeconds());
+        }
+
+        $(document).ready(function() {
+
+
+            $('#send1').click(function() {
+                $.get("send.php?id=1", function(data) {
+                    $('#log1').html(data);
+                    console.log(data);
+                });
+            });
+
+            $('#send2').click(function() {
+                $.get("send.php?id=2", function(data) {
+                    $('#log2').html(data);
+                    console.log(data);
+                });
+            });
+            $('#send3').click(function() {
+                $.get("send.php?id=3", function(data) {
+                    $('#log3').html(data);
+                    console.log(data);
+                });
+            });
+
+            $('#reset').click(function() {
+                $.get("send.php?id=reset", function(data) {
+                    $('#logreset').html(data);
+                    console.log(data);
+                });
+            });
+
+            $('#other').click(function() {
+                $.get("send.php?id=other", function(data) {
+                    $('#logother').html(data);
+                    console.log(data);
+                });
+            });
+                
+        });
+
+    </script>
+</body>
+
+</html>

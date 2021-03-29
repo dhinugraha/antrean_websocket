@@ -1,0 +1,4 @@
+[config]
+server=localhost
+port=8000
+delay=5
