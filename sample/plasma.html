@@ -141,7 +141,7 @@
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
             function connect() {
-                var server = 'ws://192.168.1.20:8000/test/';
+                var server = 'ws://localhost:8000/test/';
                 var socket = new WebSocket(server);
 
                 socket.onopen = function() {

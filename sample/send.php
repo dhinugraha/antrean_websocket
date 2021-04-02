@@ -61,8 +61,8 @@
     );
   }
 
-  $server = '192.168.1.20';
-  $group = "/test/";
+  $server = 'localhost';
+  $group = "/";
   $client = new WebsocketCient();
 
 
