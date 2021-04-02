@@ -4,7 +4,7 @@ Berdasarkan dari simple-websocket-server
 
 https://pypi.org/project/simple-websocket-server/
 
-- **pastikan ada python 2.7 atau 3.x :**
+- **pastikan ada python 3.x :**
 ```
 python -V
 ```
@@ -47,3 +47,6 @@ websocket start
 websocket stop
 websocket restart
 ```
+
+File binary windows dibangun menggunakan pyinstaller :
+pyinstaller --onefile --noconsole --hidden-import simple-websocket-server --hidden-import configparser 

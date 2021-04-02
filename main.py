@@ -2,9 +2,7 @@ import logging
 import sys
 import time
 import sqlite3
-#from sqlite3 import Error
 import threading
-import asyncio
 import json
 
 from simple_websocket_server import WebSocketServer, WebSocket
@@ -29,7 +27,7 @@ class teraWebSocket(WebSocket):
 	def handle(self):
 		sockdata = json.loads(self.data)
 		
-		conn = sqlite3.connect('file:antrean.db')
+		conn = sqlite3.connect('antrean.db')
 		cur = conn.cursor()
 		if "reset" in sockdata:
 			#reset sequence
@@ -52,7 +50,7 @@ class teraWebSocket(WebSocket):
 
 # broadcast message every n seconds defined in config (delay)
 def loops():
-	conn = sqlite3.connect('file:antrean.db')
+	conn = sqlite3.connect('antrean.db')
 	conn.row_factory = sqlite3.Row
 	cur = conn.cursor()
 	cur.execute("select count(*) from antrean")
