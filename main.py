@@ -1,20 +1,13 @@
-import logging
-import sys
-import time
+#!/usr/bin/env python3
 import sqlite3
 import threading
 import json
 
 from simple_websocket_server import WebSocketServer, WebSocket
 
-if (sys.version_info > (3, 0)):
-	import configparser
-	config = configparser.ConfigParser()
-	config.read('config.txt')
-else:
-	import ConfigParser
-	config = ConfigParser.ConfigParser()
-	config.read(r'config.txt')
+import configparser
+config = configparser.ConfigParser()
+config.read('config.txt')
 
 delay = config.get("config", "delay")
 socketserver = config.get("config", "server")

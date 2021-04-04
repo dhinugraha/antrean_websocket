@@ -1,6 +1,4 @@
-import logging
-import sys
-import time
+#!/usr/bin/env python3
 import sqlite3
 from datetime import datetime
 import threading
@@ -8,14 +6,9 @@ import json
 
 from simple_websocket_server import WebSocketServer, WebSocket
 
-if (sys.version_info > (3, 0)):
-	import configparser
-	config = configparser.ConfigParser()
-	config.read('config.txt')
-else:
-	import ConfigParser
-	config = ConfigParser.ConfigParser()
-	config.read(r'config.txt')
+import configparser
+config = configparser.ConfigParser()
+config.read('config.txt')
 
 delay = config.get("config", "delay")
 socketserver = config.get("config", "server")
@@ -31,7 +24,8 @@ class teraWebSocket(WebSocket):
 		conn = sqlite3.connect('antrean.db')
 		cur = conn.cursor()
 		print(datetime.now())
-		print("accept new data ----------------")
+		print("accept new data : " + self.data)
+		print("----------------")
 		if "reset" in sockdata:
 			#reset sequence
 			cur.execute("UPDATE SQLITE_SEQUENCE SET SEQ= 0 WHERE NAME='antrean'")
