@@ -1,10 +1,10 @@
 <?php
   include ("WebsocketClient.php");
 
-  function updatejson($key, $channel){
-    $data_antrean = file_get_contents('antrean.json');
+  function updatejson($key, $channel, $val){
+    $data_antrean = file_get_contents('antrean2.json');
     $obj = json_decode($data_antrean, true);
-    $antrian = $obj[$key] + 1;
+    $antrian = $val;
     
     $time = rand();
 
@@ -19,18 +19,13 @@
     );
     $obj[$key] = $antrian;
     $json_object = json_encode($obj);
-    file_put_contents('antrean.json', $json_object);
+    file_put_contents('antrean2.json', $json_object);
 
     return $message;
   }
 
-  if($_GET['id'] == "1") {
-    $message = updatejson('plasma1', 'channel1');
-  } else if($_GET['id'] == "2") {
-    $message = updatejson('plasma2', 'channel2');
-  } else if($_GET['id'] == "3") {
-    $message = updatejson('plasma3', 'channel3');
-  }
+  $message = updatejson('plasma'.$_GET['id'], 'channel'.$_GET['id'], $_GET['val']);
+  
   
   //reset
   if($_GET['id'] == "reset") {
@@ -42,7 +37,7 @@
       )
     );
 
-    file_put_contents('antrean.json', $data);
+    file_put_contents('antrean2.json', $data);
     $message = json_encode(
       array(
         "server"  => "devel", 
@@ -62,11 +57,10 @@
   }
 
   $server = 'localhost';
-  $group = "/coba/";
+  $group = "/rsai/devel/";
   $client = new WebsocketCient();
 
-
-  if( $sp = $client->websocket_open($server, 8000, $group, 10, $errstr) ) {
+  if( $sp = $client->websocket_open($server, 8100, $group, 10, $errstr) ) {
     //echo "Sending message to server: '$message' \n";
     $client->websocket_write($sp, $message);
     echo $message;

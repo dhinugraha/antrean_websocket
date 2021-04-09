@@ -53,7 +53,7 @@
             var obj = document.getElementById("audio");
             // get initial data
             function init() {
-                $.getJSON('antrean.json', function(init) {
+                $.getJSON('antrean2.json', function(init) {
                     $('#poli1').html(init.plasma1);
                     $('#poli2').html(init.plasma2);
                     $('#poli3').html(init.plasma3);
@@ -95,7 +95,7 @@
             }
 
             function connect() {
-                var server = 'ws://localhost:8000/test/';
+                var server = 'ws://localhost:8000/rsai/devel/';
                 var socket = new WebSocket(server);
 
                 socket.onopen = function() {

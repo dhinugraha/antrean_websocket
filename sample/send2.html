@@ -1,0 +1,77 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>websocket send</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <form class="row g-3">
+                <div class="col-auto">
+                    <label for="poli" class="visually-hidden">Poli</label>
+                    <select name="poli" id="poli" class="form-control">
+                        <option value=1>Poli 1</option>
+                        <option value=2>Poli 2</option>
+                        <option value=3>Poli 3</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="antrian" class="visually-hidden">Antrian</label>
+                    <select name="antri" id="antri" class="form-control">
+                        <option value=1>1</option>
+                        <option value=2>2</option>
+                        <option value=3>3</option>
+                        <option value=4>4</option>
+                        <option value=5>5</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <p>&nbsp;</p>
+        <button class="btn btn-primary mb-3" id="send">Kirim</button>
+        <span id="logs"></span>
+        
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script>
+        
+        function zPad(n) {
+            if (n < 10) return '0' + n;
+            else return n;
+        }
+        function timestamp() {
+            var d = new Date();
+            return zPad(d.getHours()) + ':' + zPad(d.getMinutes()) + ':' + zPad(d.getSeconds());
+        }
+
+        $(document).ready(function() {
+
+            $('#send').click(function() {
+                var id = $("#poli").val();
+                var antri = $("#antri").val();
+                $.get("send2.php?id="+id+"&val="+antri, function(data) {
+                    $('#logs').html(data);
+                    console.log(data);
+                });
+            });
+
+            $('#other').click(function() {
+                $.get("send.php?id=other", function(data) {
+                    $('#logother').html(data);
+                    console.log(data);
+                });
+            });
+                
+        });
+
+    </script>
+</body>
+
+</html>

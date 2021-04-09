@@ -2,14 +2,17 @@
 
 Berdasarkan dari simple-websocket-server
 
-https://pypi.org/project/simple-websocket-server/
+~~https://pypi.org/project/simple-websocket-server/~~
+https://github.com/dpallot/simple-websocket-server
 
 ### Sample client
 - **Support custom path subscriber :**
 ```
-ws://<ip_server:port>/plasma-lantai-1/
-ws://<ip_server:port>/plasma-lantai-2/
+ws://<ip_server:port>/devel/plasma-lantai-1/
+ws://<ip_server:port>/devel/plasma-lantai-2/
 ```
+Sehingga implementasi bisa terpusat
+
 - **Persistent reconnect jika koneksi putus**
 ```
 socket.onclose = function(event) {    

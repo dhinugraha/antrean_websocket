@@ -1,13 +1,19 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+import sys
 import sqlite3
 import threading
 import json
 
-from simple_websocket_server import WebSocketServer, WebSocket
+from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
-import configparser
-config = configparser.ConfigParser()
-config.read('config.txt')
+if (sys.version_info > (3, 0)):
+	import configparser
+	config = configparser.ConfigParser()
+	config.read('config.txt')
+else:
+	import ConfigParser
+	config = ConfigParser.ConfigParser()
+	config.read(r'config.txt')
 
 delay = config.get("config", "delay")
 socketserver = config.get("config", "server")
@@ -17,16 +23,14 @@ clients = []
 
 class teraWebSocket(WebSocket):
 	
-	def handle(self):
+	def handleMessage(self):
 		sockdata = json.loads(self.data)
 		
 		conn = sqlite3.connect('antrean.db')
 		cur = conn.cursor()
 		if "reset" in sockdata:
-			#reset sequence
-			cur.execute("UPDATE SQLITE_SEQUENCE SET SEQ= 0 WHERE NAME='antrean'")
-			conn.commit()
-			#delete data
+			cur.execute("UPDATE SQLITE_SEQUENCE SET SEQ= 0 WHERE NAME='antrean'") #reset sequence
+			conn.commit() #delete data
 			cur.execute("delete from antrean")
 			conn.commit()
 		else:
@@ -35,10 +39,10 @@ class teraWebSocket(WebSocket):
 			conn.commit()
 		conn.close()
 
-	def connected(self):
+	def handleConnected(self):
 		clients.append(self)
 
-	def handle_close(self):
+	def handleClose(self):
 		clients.remove(self)
 
 # broadcast message every n seconds defined in config (delay)
@@ -52,11 +56,10 @@ def loops():
 	if int(cnt) > 0:
 		cur.execute("select id, data from antrean order by id asc limit 1")
 		data = cur.fetchone()
-		#print(data['data'] + " " + str(data['id'])) 
 
 		#broadcast
 		for client in clients:
-			client.send_message(data['data'])
+			client.sendMessage(data['data'])
 		#delete current data
 		cur.execute("delete from antrean where id=" + str(data['id']))
 		conn.commit()
@@ -65,5 +68,5 @@ def loops():
 
 loops()
 
-server = WebSocketServer(socketserver, socketport, teraWebSocket)
-server.serve_forever()
+server = SimpleWebSocketServer(socketserver, socketport, teraWebSocket)
+server.serveforever()

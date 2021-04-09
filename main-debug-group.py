@@ -27,7 +27,7 @@ class teraWebSocket(WebSocket):
 	def handleMessage(self):
 		sockdata = json.loads(self.data)
 		
-		conn = sqlite3.connect('antrean.db')
+		conn = sqlite3.connect('antrean_multi.db')
 		cur = conn.cursor()
 		print(datetime.now())
 		print("accept new data : " + self.data)
@@ -41,12 +41,12 @@ class teraWebSocket(WebSocket):
 			conn.commit()
 		else:
 			#accept data antrean
-			cur.execute("INSERT INTO antrean(data) VALUES('" + self.data + "')")			
+			cur.execute("INSERT INTO antrean(group_plasma, data) VALUES('"+self.request.path+"', '" + self.data + "')")			
 			conn.commit()
 		conn.close()
 
 	def handleConnected(self):
-		print(self.address[0] + " connected")
+		print(self.address[0] + " " + self.request.path + " connected")
 		print("-----------------")
 		clients.append(self)
 
@@ -57,23 +57,27 @@ class teraWebSocket(WebSocket):
 
 # broadcast message every n seconds defined in config (delay)
 def loops():
-	conn = sqlite3.connect('antrean.db')
+	conn = sqlite3.connect('antrean_multi.db')
 	conn.row_factory = sqlite3.Row
 	cur = conn.cursor()
 	cur.execute("select count(*) from antrean")
 	cnt = cur.fetchone()[0]
 	
 	if int(cnt) > 0:
-		cur.execute("select id, data from antrean order by id asc limit 1")
-		data = cur.fetchone()
-		print("broadcast : " + data['data'] + " " + str(data['id'])) 
+		cur.execute("select group_plasma from antrean group by group_plasma")
+		datas = cur.fetchall()
+		for data in datas:
+			cur.execute("select id, data from antrean where group_plasma = '" + data[0]+"' order by id asc limit 1")
+			datax = cur.fetchone()
+			print("broadcast : " + data[0] + " " + datax['data'] + " " + str(datax['id'])) 
 
-		#broadcast
-		for client in clients:
-			client.sendMessage(data['data'])
-		#delete current data
-		cur.execute("delete from antrean where id=" + str(data['id']))
-		conn.commit()
+			#broadcast
+			for client in clients:
+				if client.request.path == data[0]:
+					client.sendMessage(datax['data'])
+			#delete current data
+			cur.execute("delete from antrean where id=" + str(datax['id']))
+			conn.commit()
 	else:
 		print("no data")
 
